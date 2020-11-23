@@ -1,11 +1,11 @@
 plugins {
-  `kotlin-dsl`
+    `kotlin-dsl`
 }
 
 kotlinDslPluginOptions {
-  experimentalWarning.set(false)
+    experimentalWarning.set(false)
 }
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
