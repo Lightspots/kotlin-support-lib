@@ -1,5 +1,3 @@
-import java.util.*
-
 plugins {
     kotlin("jvm")
     id("com.jfrog.bintray") version ("1.8.5")
@@ -7,54 +5,56 @@ plugins {
     `maven-publish`
 }
 
-version = "0.2.0"
+version = "0.1.0"
 
 dependencies {
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
-    testImplementation("org.junit.jupiter", "junit-jupiter-params", Versions.jUnit5)
+    implementation(kotlin("stdlib"))
+    implementation(kotlin("reflect"))
+
     // BOM dependency
     testImplementation(platform("io.strikt:strikt-bom:${Versions.strikt}"))
     testImplementation("io.strikt", "strikt-core")
     testImplementation("io.strikt", "strikt-mockk")
     testImplementation("io.strikt", "strikt-java-time")
 
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
+    testImplementation("org.junit.jupiter", "junit-jupiter-params", Versions.jUnit5)
+
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", Versions.jUnit5)
+    testRuntimeOnly("org.slf4j", "slf4j-simple", Versions.slf4j)
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val sourceSets = project.properties["sourceSets"] as SourceSetContainer
-val mainSources = sourceSets.getByName("main")
-
-val sourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(mainSources.allSource)
+java {
+    withSourcesJar()
 }
 
 bintray {
     user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
     key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
     setPublications("LightspotsBintray")
-    pkg = PackageConfig()
-    pkg.repo = "kotlin"
-    pkg.name = name
-    pkg.userOrg = "lightspots"
-    pkg.setLicenses("MIT")
-    pkg.vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
-    pkg.version = VersionConfig()
-    pkg.version.name = project.version.toString()
-    pkg.version.desc = ""
-    pkg.version.released = Date().toString()
-    pkg.version.vcsTag = project.version.toString()
+
+    pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig> {
+        repo = "kotlin"
+        name = name
+        userOrg = "lightspots"
+        setLicenses("MIT")
+        vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
+
+        version(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.VersionConfig> {
+            name = project.version.toString()
+            vcsTag = project.version.toString()
+        })
+    })
 }
 
 publishing {
     publications {
         register("LightspotsBintray", MavenPublication::class) {
             from(components["java"])
-            artifact(sourcesJar)
         }
     }
 }

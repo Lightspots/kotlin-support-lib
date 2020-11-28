@@ -6,7 +6,6 @@ plugins {
 
 allprojects {
     group = "ch.lightspots.it"
-    version = "0.2.0"
 
     repositories {
         mavenCentral()
