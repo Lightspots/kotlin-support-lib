@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    id("org.jetbrains.dokka")
     id("com.jfrog.bintray") version ("1.8.5")
     maven
     `maven-publish`
@@ -32,29 +33,42 @@ java {
     withSourcesJar()
 }
 
-bintray {
-    user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
-    key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
-    setPublications("LightspotsBintray")
+val kdocJar by tasks.creating(Jar::class) {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = "Creates KDoc"
+    archiveClassifier.set("javadoc")
+    from(tasks.dokkaHtml)
+}
 
-    pkg(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.PackageConfig> {
-        repo = "kotlin"
-        name = name
-        userOrg = "lightspots"
-        setLicenses("MIT")
-        vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
-
-        version(delegateClosureOf<com.jfrog.bintray.gradle.BintrayExtension.VersionConfig> {
-            name = project.version.toString()
-            vcsTag = project.version.toString()
-        })
-    })
+tasks.jar.configure {
+    finalizedBy(kdocJar)
 }
 
 publishing {
     publications {
-        register("LightspotsBintray", MavenPublication::class) {
+        create<MavenPublication>("LightspotsBintray") {
             from(components["java"])
+            artifact(kdocJar)
         }
     }
 }
+
+bintray {
+    user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
+    key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
+    setPublications(*publishing.publications.names.toTypedArray())
+
+    with(pkg) {
+        repo = "kotlin"
+        name = project.name
+        userOrg = "lightspots"
+        setLicenses("MIT")
+        vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
+
+        with(version) {
+            name = project.version.toString()
+            vcsTag = project.version.toString()
+        }
+    }
+}
+
