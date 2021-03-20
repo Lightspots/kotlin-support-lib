@@ -2,12 +2,10 @@ import java.util.*
 
 plugins {
     kotlin("jvm")
-    id("com.jfrog.bintray") version ("1.8.5")
+    id("org.jetbrains.dokka")
     maven
     `maven-publish`
 }
-
-version = "0.2.0"
 
 dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
@@ -25,36 +23,32 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val sourceSets = project.properties["sourceSets"] as SourceSetContainer
-val mainSources = sourceSets.getByName("main")
 
-val sourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(mainSources.allSource)
+tasks.javadoc.configure {
+    dependsOn("dokkaHtml")
+    setDestinationDir(File(buildDir, "dokka/html"))
 }
 
-bintray {
-    user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
-    key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
-    setPublications("LightspotsBintray")
-    pkg = PackageConfig()
-    pkg.repo = "kotlin"
-    pkg.name = name
-    pkg.userOrg = "lightspots"
-    pkg.setLicenses("MIT")
-    pkg.vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
-    pkg.version = VersionConfig()
-    pkg.version.name = project.version.toString()
-    pkg.version.desc = ""
-    pkg.version.released = Date().toString()
-    pkg.version.vcsTag = project.version.toString()
+tasks.assemble.configure {
+    doLast {
+        logger.lifecycle("::set-output name=version::$version")
+    }
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/lightspots/kotlin-support-lib")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
     publications {
-        register("LightspotsBintray", MavenPublication::class) {
+        create<MavenPublication>("gpr") {
             from(components["java"])
-            artifact(sourcesJar)
         }
     }
 }

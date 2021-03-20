@@ -1,12 +1,9 @@
 plugins {
     kotlin("jvm")
     id("org.jetbrains.dokka")
-    id("com.jfrog.bintray") version ("1.8.5")
     maven
     `maven-publish`
 }
-
-version = "0.1.0"
 
 dependencies {
     implementation(kotlin("stdlib"))
@@ -30,45 +27,35 @@ tasks.withType<Test> {
 }
 
 java {
+    withJavadocJar()
     withSourcesJar()
 }
 
-val kdocJar by tasks.creating(Jar::class) {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Creates KDoc"
-    archiveClassifier.set("javadoc")
-    from(tasks.dokkaHtml)
+tasks.javadoc.configure {
+    dependsOn("dokkaHtml")
+    setDestinationDir(File(buildDir, "dokka/html"))
 }
 
-tasks.jar.configure {
-    finalizedBy(kdocJar)
+tasks.assemble.configure {
+    doLast {
+        logger.lifecycle("::set-output name=version::$version")
+    }
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/lightspots/kotlin-support-lib")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
     publications {
-        create<MavenPublication>("LightspotsBintray") {
+        create<MavenPublication>("gpr") {
             from(components["java"])
-            artifact(kdocJar)
         }
     }
 }
-
-bintray {
-    user = if (project.hasProperty("bintrayUser")) project.property("bintrayUser").toString() else ""
-    key = if (project.hasProperty("bintrayApiKey")) project.property("bintrayApiKey").toString() else ""
-    setPublications(*publishing.publications.names.toTypedArray())
-
-    with(pkg) {
-        repo = "kotlin"
-        name = project.name
-        userOrg = "lightspots"
-        setLicenses("MIT")
-        vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
-
-        with(version) {
-            name = project.version.toString()
-            vcsTag = project.version.toString()
-        }
-    }
-}
-
