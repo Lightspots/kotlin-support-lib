@@ -89,10 +89,10 @@ jobs:
 
       # Upload artifacts to make it available in the next jobs
       - name: Upload artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v2
         with:
           name: gradle-artifact
-          path: ./build/libs/
+          path: ./kotlin-*/build/libs/*.jar
 
   # Prepare a draft release for GitHub Releases page for the manual verification
   # If accepted and published, release workflow would be triggered
