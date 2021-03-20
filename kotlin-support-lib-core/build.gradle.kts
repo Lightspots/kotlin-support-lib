@@ -7,6 +7,8 @@ plugins {
     `maven-publish`
 }
 
+version = "0.2.0"
+
 dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
     testImplementation("org.junit.jupiter", "junit-jupiter-params", Versions.jUnit5)
@@ -40,7 +42,7 @@ bintray {
     pkg.name = name
     pkg.userOrg = "lightspots"
     pkg.setLicenses("MIT")
-    pkg.vcsUrl = "https://git.leber-lfbg.ch/Grisu118/kotlin-wrapper.git"
+    pkg.vcsUrl = "https://github.com/Lightspots/kotlin-support-lib.git"
     pkg.version = VersionConfig()
     pkg.version.name = project.version.toString()
     pkg.version.desc = ""
