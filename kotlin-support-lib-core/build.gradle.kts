@@ -23,6 +23,10 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 tasks.javadoc.configure {
     dependsOn("dokkaHtml")
