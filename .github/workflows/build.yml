@@ -140,6 +140,6 @@ jobs:
         id: upload-release-asset
         uses: csexton/release-asset-action@v2
         with:
-          pattern: "gradle-artifact/*.jar"
+          pattern: "gradle-artifact/**/*.jar"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           release-url: ${{ steps.createDraft.outputs.upload_url }}
