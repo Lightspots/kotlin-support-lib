@@ -1,5 +1,5 @@
 object Versions {
-    const val kotlin = "1.4.30"
+    const val kotlin = "1.4.32"
 
     const val slf4j = "1.7.30"
 
