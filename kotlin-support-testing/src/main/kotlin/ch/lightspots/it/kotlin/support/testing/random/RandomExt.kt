@@ -55,31 +55,40 @@ class RandomClassGenerator(private val random: Random, private val config: Confi
         val instance = this.constructors.find { it.parameters.isEmpty() && it.visibility == KVisibility.PUBLIC }?.call()
 
         return if (instance != null) instance else {
-            val constructor = this.constructors
-                .filter { it.visibility == KVisibility.PUBLIC }
-                .minByOrNull { it.parameters.size }
-                ?: throw NoSuchElementException("No suitable constructor found for $this")
+            val d = mapType(this)
+            if (d != null) {
+                d as T
+            } else {
+                val constructor = this.constructors
+                    .filter { it.visibility == KVisibility.PUBLIC }
+                    .minByOrNull { it.parameters.size }
+                    ?: throw NoSuchElementException("No suitable constructor found for $this")
 
-            val params = constructor.parameters
-                .map { param ->
-                    val klass = param.type.classifier as KClass<*>
-                    when {
-                        klass.isPrimitive() -> klass.randomPrimitive()
-                        klass.java.isEnum -> klass.randomEnum()
-                        klass.java.isArray -> klass.randomArray()
-                        klass == List::class -> randomList(param.type.arguments)
-                        klass == MutableList::class -> randomList(param.type.arguments).toMutableList()
-                        klass == Set::class -> randomList(param.type.arguments).toSet()
-                        klass == MutableSet::class -> randomList(param.type.arguments).toMutableSet()
-                        klass == Instant::class -> randomInstant()
-                        klass == BigDecimal::class -> randomBigDecimal()
-                        else -> klass.randomClassInstance()
+                val params = constructor.parameters
+                    .map { param ->
+                        val klass = param.type.classifier as KClass<*>
+                        mapType(klass) ?: when (klass) {
+                            List::class -> randomList(param.type.arguments)
+                            MutableList::class -> randomList(param.type.arguments).toMutableList()
+                            Set::class -> randomList(param.type.arguments).toSet()
+                            MutableSet::class -> randomList(param.type.arguments).toMutableSet()
+                            else -> klass.randomClassInstance()
+                        }
                     }
-                }
-                .toTypedArray()
+                    .toTypedArray()
 
-            constructor.call(*params)
+                constructor.call(*params)
+            }
         }
+    }
+
+    private fun mapType(klass: KClass<*>): Any? = when {
+        klass.isPrimitive() -> klass.randomPrimitive()
+        klass.java.isEnum -> klass.randomEnum()
+        klass.java.isArray -> klass.randomArray()
+        klass == Instant::class -> randomInstant()
+        klass == BigDecimal::class -> randomBigDecimal()
+        else -> null
     }
 
     /**

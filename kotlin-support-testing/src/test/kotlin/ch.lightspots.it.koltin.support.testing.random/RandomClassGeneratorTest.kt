@@ -6,6 +6,7 @@ import strikt.api.expectCatching
 import strikt.api.expectThat
 import strikt.assertions.*
 import java.math.BigDecimal
+import java.time.Instant
 
 class RandomClassGeneratorTest {
 
@@ -185,6 +186,30 @@ class RandomClassGeneratorTest {
 
         expectThat(testClass)
             .isA<TestClass>()
+    }
+
+    @Test
+    fun testRandomInstantDirect() {
+        val now: Instant = randomClassInstance()
+
+        expectThat(now)
+            .isA<Instant>()
+    }
+
+    @Test
+    fun testRandomBigDecimalDirect() {
+        val decimal: BigDecimal = randomClassInstance()
+
+        expectThat(decimal)
+            .isA<BigDecimal>()
+    }
+
+    @Test
+    fun testRandomEnumDirect() {
+        val enum: TestEnum = randomClassInstance()
+
+        expectThat(enum)
+            .isA<TestEnum>()
     }
 }
 
