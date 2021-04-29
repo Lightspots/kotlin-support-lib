@@ -1,9 +1,6 @@
-import java.util.*
-
 plugins {
     kotlin("jvm")
     id("org.jetbrains.dokka")
-    maven
     `maven-publish`
 }
 
