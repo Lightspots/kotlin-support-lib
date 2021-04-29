@@ -5,5 +5,5 @@ object Versions {
 
     // testing resources
     const val jUnit5 = "5.7.1"
-    const val strikt = "0.28.1"
+    const val strikt = "0.31.0"
 }

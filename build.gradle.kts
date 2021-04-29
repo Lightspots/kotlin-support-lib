@@ -5,11 +5,10 @@ plugins {
 
 allprojects {
     group = "ch.lightspots.it"
-    version = "0.2.0"
+    version = "0.3.0"
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

@@ -12,7 +12,6 @@ dependencies {
     testImplementation(platform("io.strikt:strikt-bom:${Versions.strikt}"))
     testImplementation("io.strikt", "strikt-core")
     testImplementation("io.strikt", "strikt-mockk")
-    testImplementation("io.strikt", "strikt-java-time")
 
     testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
     testImplementation("org.junit.jupiter", "junit-jupiter-params", Versions.jUnit5)
