@@ -1,11 +1,11 @@
 plugins {
-    kotlin("jvm") version Versions.kotlin apply false
-    id("org.jetbrains.dokka") version Versions.kotlin apply false
+    kotlin("jvm") version "1.5.0" apply false
+    id("org.jetbrains.dokka") version "1.4.32" apply false
 }
 
 allprojects {
     group = "ch.lightspots.it"
-    version = "0.3.0"
+    version = "0.4.0"
 
     repositories {
         mavenCentral()
