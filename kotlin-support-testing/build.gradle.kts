@@ -8,16 +8,11 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
 
-    // BOM dependency
-    testImplementation(platform("io.strikt:strikt-bom:${Versions.strikt}"))
-    testImplementation("io.strikt", "strikt-core")
-    testImplementation("io.strikt", "strikt-mockk")
+    testImplementation(libs.bundles.junit)
+    testImplementation(libs.bundles.strikt)
 
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
-    testImplementation("org.junit.jupiter", "junit-jupiter-params", Versions.jUnit5)
-
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", Versions.jUnit5)
-    testRuntimeOnly("org.slf4j", "slf4j-simple", Versions.slf4j)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+    testRuntimeOnly(libs.slf4j.simple)
 }
 
 tasks.withType<Test> {
