@@ -25,6 +25,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
+          distribution: temurin
           java-version: 1.8
 
       # Check out current repository
@@ -62,6 +63,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
+          distribution: temurin
           java-version: 1.8
 
       # Check out current repository
