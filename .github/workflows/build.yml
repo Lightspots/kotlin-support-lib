@@ -131,7 +131,7 @@ jobs:
 
       # Download gradle artifact provided by the previous job
       - name: Download Artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: gradle-artifact
 
