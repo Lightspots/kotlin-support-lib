@@ -5,14 +5,10 @@ plugins {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter", "junit-jupiter-api", Versions.jUnit5)
-    testImplementation("org.junit.jupiter", "junit-jupiter-params", Versions.jUnit5)
-    // BOM dependency
-    testImplementation(platform("io.strikt:strikt-bom:${Versions.strikt}"))
-    testImplementation("io.strikt", "strikt-core")
-    testImplementation("io.strikt", "strikt-mockk")
+    testImplementation(libs.bundles.junit)
+    testImplementation(libs.bundles.strikt)
 
-    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", Versions.jUnit5)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 }
 
 tasks.withType<Test> {

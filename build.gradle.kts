@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version Versions.kotlin apply false
-    id("org.jetbrains.dokka") version Versions.kotlin apply false
+    alias(libs.plugins.kotlin) apply false
+    alias(libs.plugins.dokka) apply false
 }
 
 allprojects {
