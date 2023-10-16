@@ -22,4 +22,4 @@ junit = ["junit-jupiter-api", "junit-jupiter-params"]
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-dokka = { id = "org.jetbrains.dokka", version = "1.9.0" }
+dokka = { id = "org.jetbrains.dokka", version = "1.9.10" }
