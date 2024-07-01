@@ -4,7 +4,7 @@ slf4j = "2.0.13"
 
 # testing resources
 jUnit = "5.10.2"
-strikt = "0.34.1"
+strikt = "0.35.1"
 
 [libraries]
 strikt-core = { module = "io.strikt:strikt-core", version.ref = "strikt" }
