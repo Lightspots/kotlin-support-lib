@@ -3,7 +3,7 @@ kotlin = "1.9.24"
 slf4j = "2.0.13"
 
 # testing resources
-jUnit = "5.10.2"
+jUnit = "5.10.3"
 strikt = "0.35.1"
 
 [libraries]
