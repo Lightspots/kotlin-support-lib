@@ -1,6 +1,6 @@
 [versions]
 kotlin = "2.0.21"
-slf4j = "2.0.16"
+slf4j = "2.0.17"
 
 # testing resources
 jUnit = "5.11.4"
